@@ -1,0 +1,14 @@
+name: cn-navigator-infra
+runtime: nodejs
+description: S3 and CloudFront infrastructure for the cn-navigator static site.
+config:
+  aws:region:
+    value: ap-northeast-1
+  cn-navigator-infra:sitePath:
+    value: ../cn-navigator/dist
+  cn-navigator-infra:indexDocument:
+    value: index.html
+  cn-navigator-infra:errorDocument:
+    value: index.html
+  cn-navigator-infra:priceClass:
+    value: PriceClass_200
