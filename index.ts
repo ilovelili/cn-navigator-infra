@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as crypto from "crypto";
 import * as path from "path";
 import * as aws from "@pulumi/aws";
 import * as pulumi from "@pulumi/pulumi";
@@ -12,6 +13,7 @@ const sitePath = config.get("sitePath") ?? "../cn-navigator/dist";
 const indexDocument = config.get("indexDocument") ?? "index.html";
 const errorDocument = config.get("errorDocument") ?? indexDocument;
 const priceClass = config.get("priceClass") ?? "PriceClass_200";
+const excludedExtensions = new Set([".map"]);
 
 const siteRoot = path.resolve(sitePath);
 if (!fs.existsSync(siteRoot)) {
@@ -154,11 +156,21 @@ function listFiles(directory: string): string[] {
     }
 
     if (entry.isFile()) {
-      return [entryPath];
+      return shouldUploadFile(entryPath) ? [entryPath] : [];
     }
 
     return [];
   });
+}
+
+function shouldUploadFile(filePath: string): boolean {
+  const fileName = path.basename(filePath);
+
+  if (fileName.startsWith(".")) {
+    return false;
+  }
+
+  return !excludedExtensions.has(path.extname(filePath));
 }
 
 function cacheControlFor(objectKey: string): string {
@@ -174,5 +186,15 @@ function cacheControlFor(objectKey: string): string {
 }
 
 function stableResourceName(objectKey: string): string {
-  return objectKey.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-");
+  const readableName = objectKey
+    .replace(/[^a-zA-Z0-9]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+  const uniqueSuffix = crypto
+    .createHash("sha1")
+    .update(objectKey)
+    .digest("hex")
+    .slice(0, 10);
+
+  return `${readableName}-${uniqueSuffix}`;
 }
