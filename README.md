@@ -17,6 +17,12 @@ make config STACK=dev AWS_REGION=ap-northeast-1 SITE_PATH=../cn-navigator/dist
 make deploy STACK=dev
 ```
 
+The default AWS profile is `cn-logistics`. Override it for any make target with:
+
+```sh
+make preview AWS_PROFILE=other-profile
+```
+
 Useful outputs:
 
 ```sh

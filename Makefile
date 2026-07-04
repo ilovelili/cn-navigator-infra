@@ -4,6 +4,7 @@ APP_DIR ?= ../cn-navigator
 SITE_PATH ?= $(APP_DIR)/dist
 STACK ?= dev
 AWS_REGION ?= ap-northeast-1
+AWS_PROFILE ?= cn-logistics
 
 .PHONY: help install stack config build-app preview up deploy destroy refresh outputs typecheck clean
 
@@ -27,6 +28,7 @@ stack:
 
 config: stack
 	pulumi config set aws:region $(AWS_REGION)
+	pulumi config set aws:profile $(AWS_PROFILE)
 	pulumi config set sitePath $(SITE_PATH)
 
 build-app:
