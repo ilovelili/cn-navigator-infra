@@ -23,6 +23,13 @@ The default AWS profile is `cn-logistics`. Override it for any make target with:
 make preview AWS_PROFILE=other-profile
 ```
 
+The default Pulumi owner is the individual account `ilovelili`, so `make stack`
+selects or creates `ilovelili/prod` by default. Override it with:
+
+```sh
+make stack PULUMI_OWNER=other-account-or-org STACK=prod
+```
+
 Useful outputs:
 
 ```sh
