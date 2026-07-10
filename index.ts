@@ -14,6 +14,7 @@ const indexDocument = config.get("indexDocument") ?? "index.html";
 const errorDocument = config.get("errorDocument") ?? indexDocument;
 const priceClass = config.get("priceClass") ?? "PriceClass_200";
 const excludedExtensions = new Set([".map"]);
+const cachingOptimizedCachePolicyId = "658327ea-f89d-4fab-a63d-7e88639e58f6";
 
 const siteRoot = path.resolve(sitePath);
 if (!fs.existsSync(siteRoot)) {
@@ -64,15 +65,7 @@ const distribution = new aws.cloudfront.Distribution("site-cdn", {
     allowedMethods: ["GET", "HEAD", "OPTIONS"],
     cachedMethods: ["GET", "HEAD", "OPTIONS"],
     compress: true,
-    forwardedValues: {
-      queryString: false,
-      cookies: {
-        forward: "none",
-      },
-    },
-    minTtl: 0,
-    defaultTtl: 3600,
-    maxTtl: 86400,
+    cachePolicyId: cachingOptimizedCachePolicyId,
   },
   customErrorResponses: [
     {

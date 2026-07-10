@@ -16,11 +16,14 @@ help:
 	@printf "  make stack        Select or create the Pulumi stack ($(PULUMI_STACK))\n"
 	@printf "  make config       Set default stack config values\n"
 	@printf "  make build-app    Build the source app in $(APP_DIR)\n"
+	@printf "  make typecheck    Typecheck the Pulumi program\n"
 	@printf "  make preview      Preview infrastructure changes\n"
 	@printf "  make up           Apply infrastructure changes\n"
 	@printf "  make deploy       Build app, configure stack, and deploy\n"
 	@printf "  make destroy      Destroy the stack resources\n"
+	@printf "  make refresh      Refresh stack state\n"
 	@printf "  make outputs      Show stack outputs\n"
+	@printf "  make clean        Remove generated local artifacts\n"
 
 install:
 	npm install
@@ -45,7 +48,8 @@ preview: config
 up: config
 	pulumi up
 
-deploy: build-app up
+deploy: build-app
+	$(MAKE) up
 
 destroy: stack
 	pulumi destroy
