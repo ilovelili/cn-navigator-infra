@@ -2,6 +2,14 @@
 
 Pulumi TypeScript infrastructure for hosting the `cn-navigator` Vite build on S3 behind CloudFront.
 
+## Architecture
+
+![CN Navigator infrastructure architecture](docs/cn-navigator-infra-diagram.svg)
+
+The Vite single-page application is served from a private S3 bucket through
+CloudFront and Origin Access Control. Authentication is handled by Auth0, while
+application data, RPCs, and file storage remain in Supabase.
+
 ## Prerequisites
 
 - Node.js and npm
