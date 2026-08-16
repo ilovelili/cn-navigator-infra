@@ -1,10 +1,10 @@
 SHELL := /bin/bash
 
-APP_DIR ?= ../cn-navigator
+APP_DIR ?= ../cn-logistics
 SITE_PATH ?= $(APP_DIR)/dist
-STACK ?= dev
+STACK ?= prod
 AWS_REGION ?= ap-northeast-1
-AWS_PROFILE ?= cn-logistics
+AWS_PROFILE ?= cn-navigator
 PULUMI_OWNER ?= ilovelili
 PULUMI_STACK := $(PULUMI_OWNER)/$(STACK)
 
