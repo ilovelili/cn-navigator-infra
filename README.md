@@ -45,3 +45,27 @@ make outputs STACK=dev
 ```
 
 The default app source directory is `../cn-navigator`, and the default deployed artifact path is `../cn-navigator/dist`.
+
+## Custom domain
+
+To serve a stack through a custom domain, configure both the domain name and an
+issued ACM certificate ARN. CloudFront certificates must be created in
+`us-east-1`.
+
+```sh
+make deploy STACK=prod
+```
+
+`CUSTOM_DOMAIN` defaults to `navigator.cnlogistics.co.jp`, and
+`CERTIFICATE_ARN` defaults to the production certificate in `us-east-1`.
+Override both values when deploying to a different AWS account or hostname.
+
+After the CloudFront update finishes, create the following record with the
+external DNS provider and retain the separate ACM validation CNAME for
+automatic certificate renewal:
+
+```text
+Type:  CNAME
+Name:  navigator
+Value: dgbbs9szog7eu.cloudfront.net
+```

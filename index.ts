@@ -13,8 +13,16 @@ const sitePath = config.get("sitePath") ?? "../cn-navigator/dist";
 const indexDocument = config.get("indexDocument") ?? "index.html";
 const errorDocument = config.get("errorDocument") ?? indexDocument;
 const priceClass = config.get("priceClass") ?? "PriceClass_200";
+const customDomain = config.get("customDomain")?.trim();
+const certificateArn = config.get("certificateArn")?.trim();
 const excludedExtensions = new Set([".map"]);
 const cachingOptimizedCachePolicyId = "658327ea-f89d-4fab-a63d-7e88639e58f6";
+
+if (Boolean(customDomain) !== Boolean(certificateArn)) {
+  throw new Error(
+    "customDomain and certificateArn must either both be configured or both be omitted.",
+  );
+}
 
 const siteRoot = path.resolve(sitePath);
 if (!fs.existsSync(siteRoot)) {
@@ -52,6 +60,7 @@ const distribution = new aws.cloudfront.Distribution("site-cdn", {
   isIpv6Enabled: true,
   defaultRootObject: indexDocument,
   priceClass,
+  aliases: customDomain ? [customDomain] : [],
   origins: [
     {
       originId: bucket.arn,
@@ -86,9 +95,15 @@ const distribution = new aws.cloudfront.Distribution("site-cdn", {
       restrictionType: "none",
     },
   },
-  viewerCertificate: {
-    cloudfrontDefaultCertificate: true,
-  },
+  viewerCertificate: customDomain
+    ? {
+        acmCertificateArn: certificateArn,
+        minimumProtocolVersion: "TLSv1.2_2021",
+        sslSupportMethod: "sni-only",
+      }
+    : {
+        cloudfrontDefaultCertificate: true,
+      },
 });
 
 new aws.s3.BucketPolicy("site-bucket-policy", {
@@ -138,7 +153,9 @@ for (const filePath of listFiles(siteRoot)) {
 export const bucketName = bucket.bucket;
 export const cloudFrontDistributionId = distribution.id;
 export const cloudFrontDomainName = distribution.domainName;
-export const siteUrl = pulumi.interpolate`https://${distribution.domainName}`;
+export const siteUrl = customDomain
+  ? `https://${customDomain}`
+  : pulumi.interpolate`https://${distribution.domainName}`;
 
 function listFiles(directory: string): string[] {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
