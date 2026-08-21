@@ -2,6 +2,7 @@
   "name": "cn-navigator-infra",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.7.1",
   "description": "Pulumi infrastructure for deploying cn-navigator to S3 and CloudFront.",
   "scripts": {
     "build": "tsc",

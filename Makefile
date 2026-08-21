@@ -29,7 +29,7 @@ help:
 	@printf "  make clean        Remove generated local artifacts\n"
 
 install:
-	npm install
+	pnpm install
 
 stack:
 	pulumi stack select $(PULUMI_STACK) || pulumi stack init $(PULUMI_STACK)
@@ -44,10 +44,10 @@ config: stack
 	fi
 
 build-app:
-	cd $(APP_DIR) && npm run build
+	cd $(APP_DIR) && pnpm build
 
 typecheck:
-	npm run typecheck
+	pnpm typecheck
 
 preview: config
 	pulumi preview

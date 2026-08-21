@@ -12,7 +12,7 @@ application data, RPCs, and file storage remain in Supabase.
 
 ## Prerequisites
 
-- Node.js and npm
+- Node.js and pnpm 10.7.1
 - Pulumi CLI
 - AWS credentials for the target account
 
